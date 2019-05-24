@@ -1,0 +1,32 @@
+{
+  "name": "gen-timesheet",
+  "version": "1.0.0",
+  "description": "A tool to generate timesheet",
+  "main": "index.js",
+  "scripts": {
+    "start": "serve",
+    "lint": "standard --fix",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ArnaudBuchholz/gen-timesheet.git"
+  },
+  "keywords": [
+    "timesheet",
+    "xls"
+  ],
+  "author": "Arnaud Buchholz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ArnaudBuchholz/gen-timesheet/issues"
+  },
+  "homepage": "https://github.com/ArnaudBuchholz/gen-timesheet#readme",
+  "dependencies": {
+    "gpf-js": "^0.2.9",
+    "serve": "^11.0.0"
+  },
+  "devDependencies": {
+    "standard": "^12.0.1"
+  }
+}
