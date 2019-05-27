@@ -1,6 +1,6 @@
 'use strict'
 
-/* global gpf */
+/* global gpf, XMLWorkbook */
 
 const tags = {}
 'div,span,form,label,button,select,option'
@@ -19,6 +19,7 @@ function dateToUsrFmt (date) {
 
 function generateFor (year) {
   console.log('Generating calendar for year ' + year)
+  const workbook = new XMLWorkbook()
   const janFirst = new Date(year, 0, 1, 0, 0, 0, 0)
   let day = janFirst
   // Search for the first day of the week
@@ -68,7 +69,7 @@ function generateFor (year) {
     }
     day = firstDayOfWeek
   }
-
+  return workbook.toString()
 }
 
 window.addEventListener('load', () => {
@@ -88,6 +89,6 @@ window.addEventListener('load', () => {
     window.event.preventDefault()
     const yearSelect = document.getElementById('year')
     const selectedYear = parseInt(yearSelect.options[yearSelect.selectedIndex].value, 10)
-    generateFor(selectedYear)
+    location.href = generateFor(selectedYear)
   })
 })
