@@ -9,6 +9,16 @@ const tags = {}
 const weekDays = [1, 2, 3, 4, 5, 6] // Ignore sunday
 const DAY = 24 * 60 * 60 * 1000
 
+const FORMAT_NORMAL = 0
+const FORMAT_BREAKOUT = 1
+const FORMAT_OUT = 2
+
+const FORMAT_CONSOLE = [
+  'background: white; color: black;',
+  'background: blue; color: yellow;',
+  'background: black; color: yellow;'
+]
+
 function pad (number, length = 2) {
   return number.toString().padStart(length, '0')
 }
@@ -56,19 +66,21 @@ function generateFor (year) {
     weekDays.forEach(() => {
       dates.push(`%c${dateToUsrFmt(day)}`)
       if (day.getFullYear() !== year) {
-        formats.push('background: black; color: yellow;')
+        formats.push(FORMAT_OUT)
       } else if (lastBreakoutDate && day <= lastBreakoutDate) {
-        formats.push('background: blue; color: yellow;')
+        formats.push(FORMAT_BREAKOUT)
       } else if (day > breakoutDates[0]) {
-        formats.push('background: blue; color: yellow;')
+        formats.push(FORMAT_BREAKOUT)
         breakout = true
       } else {
-        formats.push('background: white; color: black;')
+        formats.push(FORMAT_NORMAL)
       }
       day = new Date(day.getTime() + DAY)
       clearTime(day)
     })
-    console.log.apply(console, [dates.join(' ')].concat(formats));
+    if (formats.includes(FORMAT_NORMAL)) {
+      console.log.apply(console, [dates.join(' ')].concat(formats.map(format => FORMAT_CONSOLE[format])));
+    }
     if (breakout) {
       console.log(`%c--- BREAKOUT OF ${dateToUsrFmt(breakoutDates[0])} ---`, 'color: red')
       lastBreakoutDate = breakoutDates.shift()
