@@ -17,6 +17,13 @@ function dateToUsrFmt (date) {
   return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}`
 }
 
+function clearTime (date) {
+  date.setHours(0)
+  date.setMinutes(0)
+  date.setSeconds(0)
+  date.setMilliseconds(0)
+}
+
 function generateFor (year) {
   console.log('Generating calendar for year ' + year)
   const workbook = new XMLWorkbook()
@@ -28,11 +35,12 @@ function generateFor (year) {
   }
   console.log('First day of the week for this year: ' + dateToUsrFmt(day))
   // Breakout dates
-  const breakoutDates = [new Date(year, 0, 15, 0, 0, 0, 0)]
+  const breakoutDates = [new Date(year, 0, 15)]
   for (var month = 1; month < 13; ++month) {
-    breakoutDates.push(new Date(year, month, 0, 0, 0, 0, 0), new Date(year, month, 15, 0, 0, 0, 0))
+    breakoutDates.push(new Date(year, month, 0), new Date(year, month, 15))
   }
-  breakoutDates.push(new Date(year, 11, 31, 0, 0, 0, 0));
+  breakoutDates.push(new Date(year, 11, 31));
+  breakoutDates.forEach(clearTime)
   console.log('Breakout dates:')
   breakoutDates.forEach(date => console.log(`\t${dateToUsrFmt(date)}`))
   // Render calendar
@@ -58,6 +66,7 @@ function generateFor (year) {
         formats.push('background: white; color: black;')
       }
       day = new Date(day.getTime() + DAY)
+      clearTime(day)
     })
     console.log.apply(console, [dates.join(' ')].concat(formats));
     if (breakout) {
@@ -66,6 +75,7 @@ function generateFor (year) {
       breakout = false
     } else {
       firstDayOfWeek = new Date(firstDayOfWeek.getTime() + 7 * DAY)
+      clearTime(firstDayOfWeek)
     }
     day = firstDayOfWeek
   }
@@ -89,6 +99,6 @@ window.addEventListener('load', () => {
     window.event.preventDefault()
     const yearSelect = document.getElementById('year')
     const selectedYear = parseInt(yearSelect.options[yearSelect.selectedIndex].value, 10)
-    location.href = generateFor(selectedYear)
+    /*location.href =*/ generateFor(selectedYear)
   })
 })
