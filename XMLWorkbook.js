@@ -74,17 +74,20 @@ class XMLWorkbook {
      <Font ss:FontName="Arial"/>
      <Interior ss:Color="#EFEFEF" ss:Pattern="Solid"/>
      <NumberFormat ss:Format="hh:mm"/>
+     <Protection ss:Protected="0"/>
     </Style>
     <Style ss:ID="sDayTo">
      <Alignment ss:Vertical="Bottom" ss:WrapText="1"/>
      <Font ss:FontName="Arial"/>
      <NumberFormat ss:Format="hh:mm"/>
+     <Protection ss:Protected="0"/>
     </Style>
     <Style ss:ID="sDayBreak">
      <Alignment ss:Vertical="Bottom" ss:WrapText="1"/>
      <Font ss:FontName="Arial"/>
      <Interior ss:Color="#F4CCCC" ss:Pattern="Solid"/>
      <NumberFormat ss:Format="hh:mm"/>
+     <Protection ss:Protected="0"/>
     </Style>
     <Style ss:ID="sDayTotal">
      <Alignment ss:Vertical="Bottom" ss:WrapText="1"/>
@@ -104,8 +107,25 @@ class XMLWorkbook {
      <Interior ss:Color="#000000" ss:Pattern="Solid"/>
      <NumberFormat ss:Format="m/d/yyyy\ h:mm:ss"/>
     </Style>
+    <Style ss:ID="sBreakoutTotal">
+      <Alignment ss:Vertical="Bottom" ss:WrapText="1"/>
+      <Borders>
+        <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#000000"/>
+      </Borders>
+      <Font ss:FontName="Arial" ss:Bold="1"/>
+      <Interior ss:Color="#B4A7D6" ss:Pattern="Solid"/>
+      <NumberFormat ss:Format="[h]:mm:ss"/>
+    </Style>
+    <Style ss:ID="sBreakoutCells">
+     <Alignment ss:Vertical="Bottom" ss:WrapText="1"/>
+     <Borders>
+      <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#000000"/>
+     </Borders>
+     <Font ss:FontName="Arial"/>
+     <Interior ss:Color="#B4A7D6" ss:Pattern="Solid"/>
+    </Style>
   </Styles>
-  <Worksheet ss:Name="${year}">
+  <Worksheet ss:Name="${year}" ss:Protected="1">
    <Table ss:ExpandedColumnCount="${4 * weekDays.length + 2}" x:FullColumns="1" x:FullRows="1" ss:StyleID="sDefault" ss:DefaultColumnWidth="79.5">
      <Column ss:StyleID="sDefault" ss:AutoFitWidth="0" ss:Width="41"/>
      <Column ss:StyleID="sDefault" ss:AutoFitWidth="0" ss:Width="48"/>
@@ -119,25 +139,31 @@ class XMLWorkbook {
     )
     this._content.push(`     </Row>
 `)
+    this._weeks = 0
   }
 
   renderWeek (dates, formats) {
+    ++this._weeks
     const formula = formats
       .map((format, index) => format === 0 ? index : undefined)
       .filter(index => index !== undefined)
       .map(index => `RC[${4 * (index + 1)}]`)
       .join ('+')
     this._content.push(`     <Row ss:AutoFitHeight="0">
-       <Cell ss:StyleID="sWeekHeader"><Data ss:Type="DateTime">${dates[0].toISOString()}</Data></Cell>
-       <Cell ss:StyleID="sWeekTotal" ss:Formula="=${formula}"><Data ss:Type="DateTime">1899-12-31T00:00:00.000</Data></Cell>
+      <Cell ss:StyleID="sWeekHeader"><Data ss:Type="DateTime">${dates[0].toISOString()}</Data></Cell>
+      <Cell ss:StyleID="sWeekTotal" ss:Formula="=${formula}"><Data ss:Type="DateTime">1899-12-31T00:00:00.000</Data></Cell>
 `)
     dates.forEach((day, index) => {
-      const format = [undefined, 'sDayOut', 'sDayOut'][formats[index]]
-      this._content.push(`      <Cell ss:StyleID="${format || 'sDayFrom'}"/>
-      <Cell ss:StyleID="${format || 'sDayTo'}"/>
-      <Cell ss:StyleID="${format || 'sDayBreak'}"/>
-      <Cell ss:StyleID="${format || 'sDayTotal'}" ss:Formula="=RC[-2]-RC[-3]-RC[-1]"><Data ss:Type="DateTime">1899-12-31T00:00:00.000</Data></Cell>
-`)})
+      if (formats[index] !== 0) {
+        this._content.push(`      <Cell ss:StyleID="sDayOut" ss:MergeAcross="3"/>
+`)
+      } else {
+        this._content.push(`      <Cell ss:StyleID="sDayFrom"/>
+      <Cell ss:StyleID="sDayTo"/>
+      <Cell ss:StyleID="sDayBreak"/>
+      <Cell ss:StyleID="sDayTotal" ss:Formula="=RC[-2]-RC[-3]-RC[-1]"><Data ss:Type="DateTime">1899-12-31T00:00:00.000</Data></Cell>
+`)}
+    })
     this._content.push(`     </Row>
 `)
   }
@@ -153,9 +179,17 @@ class XMLWorkbook {
       this._content.push(`       <Cell ss:StyleID="sBreakoutHeader"><Data ss:Type="String">${month}</Data></Cell>
 `)
     }
-    this._content.push(`     </Row>
+    const rows = []
+    while (this._weeks > 0) {
+      rows.push(`R[-${this._weeks}]C`)
+      --this._weeks
+    }
+    const formula = rows.join('+')
+    this._content.push(`       <Cell ss:StyleID="sBreakoutTotal" ss:Formula="=${formula}"><Data ss:Type="DateTime">1899-12-31T00:00:00.000</Data></Cell>
+       <Cell ss:StyleID="sBreakoutCells" ss:MergeAcross="${4 * this._weekDays.length - 1}"/>
+     </Row>
 `)
-
+    this._weeks = 0
   }
 
   toString () {
