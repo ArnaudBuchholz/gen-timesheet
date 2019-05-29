@@ -65,6 +65,12 @@ function generateFor (year, weekDays, breakoutType) {
   let lastBreakoutDate
   let maxNumberOfLoops = 100 // Security against infinite loops :-)
   let firstDayOfWeek = day
+  function insertBreakout () {
+    lastBreakoutDate = breakoutDates.shift()
+    console.log(`%c--- BREAKOUT OF ${dateToUsrFmt(lastBreakoutDate)} ---`, 'color: red')
+    workbook.renderBreakout(lastBreakoutDate)
+    breakout = false
+  }
   while (day.getFullYear() !== year + 1 && --maxNumberOfLoops) {
     dates.length = 0
     formats.length = 0
@@ -89,16 +95,14 @@ function generateFor (year, weekDays, breakoutType) {
       workbook.renderWeek(dates, formats)
     }
     if (breakout) {
-      lastBreakoutDate = breakoutDates.shift()
-      console.log(`%c--- BREAKOUT OF ${dateToUsrFmt(lastBreakoutDate)} ---`, 'color: red')
-      workbook.renderBreakout(lastBreakoutDate)
-      breakout = false
+      insertBreakout()
     } else {
       firstDayOfWeek = new Date(firstDayOfWeek.getTime() + 7 * DAY)
       clearTime(firstDayOfWeek)
     }
     day = firstDayOfWeek
   }
+  insertBreakout() // final one
   return workbook.toString()
 }
 
