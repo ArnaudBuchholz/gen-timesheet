@@ -95,6 +95,15 @@ class XMLWorkbook {
      <Interior ss:Color="#D9EAD3" ss:Pattern="Solid"/>
      <NumberFormat ss:Format="hh:mm"/>
     </Style>
+    <Style ss:ID="sDayOut">
+     <Alignment ss:Vertical="Bottom" ss:WrapText="1"/>
+     <Borders>
+      <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#000000"/>
+     </Borders>
+     <Font ss:FontName="Arial"/>
+     <Interior ss:Color="#000000" ss:Pattern="Solid"/>
+     <NumberFormat ss:Format="m/d/yyyy\ h:mm:ss"/>
+    </Style>
   </Styles>
   <Worksheet ss:Name="${year}">
    <Table ss:ExpandedColumnCount="${4 * weekDays.length + 2}" x:FullColumns="1" x:FullRows="1" ss:StyleID="sDefault" ss:DefaultColumnWidth="79.5">
@@ -113,16 +122,22 @@ class XMLWorkbook {
   }
 
   renderWeek (dates, formats) {
+    const formula = formats
+      .map((format, index) => format === 0 ? index : undefined)
+      .filter(index => index !== undefined)
+      .map(index => `RC[${4 * (index + 1)}]`)
+      .join ('+')
     this._content.push(`     <Row ss:AutoFitHeight="0">
        <Cell ss:StyleID="sWeekHeader"><Data ss:Type="DateTime">${dates[0].toISOString()}</Data></Cell>
-       <Cell ss:StyleID="sWeekTotal"><Data ss:Type="DateTime">1899-12-31T00:00:00.000</Data></Cell>
+       <Cell ss:StyleID="sWeekTotal" ss:Formula="=${formula}"><Data ss:Type="DateTime">1899-12-31T00:00:00.000</Data></Cell>
 `)
-    // ss:Formula="=RC[2]-RC[1]+RC[4]-RC[3]+RC[8]-RC[7]+RC[10]-RC[9]+RC[14]-RC[13]+RC[16]-RC[15]-RC[5]-RC[11]-RC[17]"
-    dates.forEach(() => this._content.push(`      <Cell ss:StyleID="sDayFrom"/>
-      <Cell ss:StyleID="sDayTo"/>
-      <Cell ss:StyleID="sDayBreak"/>
-      <Cell ss:StyleID="sDayTotal" ss:Formula="=RC[-2]-RC[-3]-RC[-1]"><Data ss:Type="DateTime">1899-12-31T00:00:00.000</Data></Cell>
-`))
+    dates.forEach((day, index) => {
+      const format = [undefined, 'sDayOut', 'sDayOut'][formats[index]]
+      this._content.push(`      <Cell ss:StyleID="${format || 'sDayFrom'}"/>
+      <Cell ss:StyleID="${format || 'sDayTo'}"/>
+      <Cell ss:StyleID="${format || 'sDayBreak'}"/>
+      <Cell ss:StyleID="${format || 'sDayTotal'}" ss:Formula="=RC[-2]-RC[-3]-RC[-1]"><Data ss:Type="DateTime">1899-12-31T00:00:00.000</Data></Cell>
+`)})
     this._content.push(`     </Row>
 `)
   }
