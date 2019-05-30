@@ -1,9 +1,9 @@
 'use strict'
 
-/* global gpf, XMLWorkbook */
+/* global gpf, XMLWorkbook, location, i18n */
 
 const tags = {}
-'h1,p,div,span,form,label,button,select,option'
+'h1,h6,a,p,div,span,form,label,button,select,option'
   .split(',').forEach(tag => { tags[tag] = gpf.web.createTagFunction(tag) })
 
 const DAY = 24 * 60 * 60 * 1000
@@ -46,12 +46,12 @@ function generateFor (year, weekDays, breakoutType) {
   // Breakout dates
   const breakoutDates = []
   if (breakoutType === 2) {
-      breakoutDates.push(new Date(year, 0, 15))
+    breakoutDates.push(new Date(year, 0, 15))
   }
   for (var month = 1; month < 13; ++month) {
     breakoutDates.push(new Date(year, month, 0))
     if (breakoutType === 2) {
-        breakoutDates.push(new Date(year, month, 15))
+      breakoutDates.push(new Date(year, month, 15))
     }
   }
   breakoutDates.push(new Date(year, 11, 31))
@@ -111,34 +111,38 @@ function getSelectedValue (id) {
   return select.options[select.selectedIndex].value
 }
 
-window.addEventListener('load', () => {
+function showForm () {
   const currentYear = (new Date()).getFullYear()
-
+  document.title = i18n('form.title')
   tags.div({ className: 'jumbotron' }, [
     tags.h1(document.title),
+    tags.h6(Object.keys(i18n.locales)
+        .filter(locale => locale !== i18n.locale)
+        .map(locale => tags.a({ href:'?lang=' + locale }, tags.span({ className: 'badge badge-secondary' }, i18n.locales[locale])))
+    ),
     tags.p(tags.form([
       tags.div({ className: 'form-group' }, [
-        tags.label({ for: 'year' }, 'Select year'),
+        tags.label({ for: 'year' }, i18n('form.year')),
         tags.select({ className: 'form-control', id: 'year' }, [
           tags.option({ value: currentYear }, currentYear),
           tags.option({ value: currentYear + 1 }, currentYear + 1)
         ])
       ]),
       tags.div({ className: 'form-group' }, [
-        tags.label({ for: 'week' }, 'Select week type'),
+        tags.label({ for: 'week' }, i18n('form.week')),
         tags.select({ className: 'form-control', id: 'week' }, [
           tags.option({ value: '1,2,3,4,5,6' }, 'Mon, Tue, Wed, Thu, Fri, Sat'),
           tags.option({ value: '1,2,3,4,5' }, 'Mon, Tue, Wed, Thu, Fri')
         ])
       ]),
       tags.div({ className: 'form-group' }, [
-        tags.label({ for: 'breakouts' }, 'Select breakout type'),
+        tags.label({ for: 'breakouts' }, i18n('form.breakout')),
         tags.select({ className: 'form-control', id: 'breakouts' }, [
           tags.option({ value: '2' }, 'Twice per month (15 / end of month)'),
           tags.option({ value: '1' }, 'Every month')
         ])
       ]),
-      tags.button({ className: 'btn btn-primary', id: 'generate' }, 'Generate')
+      tags.button({ className: 'btn btn-primary', id: 'generate' }, i18n('form.generate'))
     ]))
   ]).appendTo(document.body)
 
@@ -150,4 +154,8 @@ window.addEventListener('load', () => {
     const breakoutType = parseInt(getSelectedValue('breakouts'), 10)
     location.href = generateFor(selectedYear, selectedWeek, breakoutType)
   })
+}
+
+window.addEventListener('load', () => {
+  i18n.ready.then(showForm)
 })
