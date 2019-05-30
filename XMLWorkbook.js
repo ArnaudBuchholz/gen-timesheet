@@ -1,7 +1,6 @@
 'use strict'
 
-var DAYS = 'Dimanche,Lundi,Mardi,Mercredi,Jeudi,Vendredi,Samedi'.split(',')
-var MONTHS = 'Janvier,Février,Mars,Avril,Mai,Juin,Juillet,Août,Septembre,Octobre,Novembre,Décembre'.split(',')
+/* global i18n */
 
 class XMLWorkbook {
   constructor (year, weekDays) {
@@ -105,7 +104,7 @@ class XMLWorkbook {
      </Borders>
      <Font ss:FontName="Arial"/>
      <Interior ss:Color="#000000" ss:Pattern="Solid"/>
-     <NumberFormat ss:Format="m/d/yyyy\ h:mm:ss"/>
+     <NumberFormat ss:Format="m/d/yyyy h:mm:ss"/>
     </Style>
     <Style ss:ID="sBreakoutTotal">
       <Alignment ss:Vertical="Bottom" ss:WrapText="1"/>
@@ -132,10 +131,10 @@ class XMLWorkbook {
      <Column ss:StyleID="sDefault" ss:AutoFitWidth="0" ss:Width="40" ss:Span="${4 * weekDays.length - 1}"/>
      <Row ss:AutoFitHeight="0">
       <Cell ss:StyleID="sDateColumn"/>
-      <Cell ss:StyleID="sHoursColumn"><Data ss:Type="String">Heures</Data></Cell>
+      <Cell ss:StyleID="sHoursColumn"><Data ss:Type="String">${i18n.capitalized('workbook.hours')}</Data></Cell>
 `]
     weekDays.forEach(day =>
-      this._content.push(`      <Cell ss:MergeAcross="3" ss:StyleID="sDayHeader"><Data ss:Type="String">${DAYS[day]}</Data></Cell>`)
+      this._content.push(`      <Cell ss:MergeAcross="3" ss:StyleID="sDayHeader"><Data ss:Type="String">${i18n.capitalized(`days.${day}`)}</Data></Cell>`)
     )
     this._content.push(`     </Row>
 `)
@@ -148,7 +147,7 @@ class XMLWorkbook {
       .map((format, index) => format === 0 ? index : undefined)
       .filter(index => index !== undefined)
       .map(index => `RC[${4 * (index + 1)}]`)
-      .join ('+')
+      .join('+')
     this._content.push(`     <Row ss:AutoFitHeight="0">
       <Cell ss:StyleID="sWeekHeader"><Data ss:Type="DateTime">${dates[0].toISOString()}</Data></Cell>
       <Cell ss:StyleID="sWeekTotal" ss:Formula="=${formula}"><Data ss:Type="DateTime">1899-12-31T00:00:00.000</Data></Cell>
@@ -162,21 +161,21 @@ class XMLWorkbook {
       <Cell ss:StyleID="sDayTo"/>
       <Cell ss:StyleID="sDayBreak"/>
       <Cell ss:StyleID="sDayTotal" ss:Formula="=RC[-2]-RC[-3]-RC[-1]"><Data ss:Type="DateTime">1899-12-31T00:00:00.000</Data></Cell>
-`)}
+`)
+      }
     })
     this._content.push(`     </Row>
 `)
   }
 
   renderBreakout (date) {
-    const month = MONTHS[date.getMonth()]
     this._content.push(`     <Row ss:AutoFitHeight="0">
 `)
     if (date.getDate() === 15) {
       this._content.push(`       <Cell ss:StyleID="sBreakoutHeader"><Data ss:Type="String">15/</Data></Cell>
 `)
     } else {
-      this._content.push(`       <Cell ss:StyleID="sBreakoutHeader"><Data ss:Type="String">${month}</Data></Cell>
+      this._content.push(`       <Cell ss:StyleID="sBreakoutHeader"><Data ss:Type="String">${i18n.capitalized(`months.${date.getMonth()}`)}</Data></Cell>
 `)
     }
     const rows = []
