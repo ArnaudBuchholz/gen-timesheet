@@ -1,0 +1,37 @@
+{
+  "locales": { "en": "english", "fr": "français"},
+  "days": [
+    { "en": "sunday",    "fr": "dimanche" },
+    { "en": "monday",    "fr": "lundi" },
+    { "en": "tuesday",   "fr": "mardi" },
+    { "en": "wednesday", "fr": "mercredi" },
+    { "en": "wednesday", "fr": "mercredi" },
+    { "en": "thursday",  "fr": "jeudi" },
+    { "en": "friday",    "fr": "vendredi" },
+    { "en": "saturday",  "fr": "samedi" }
+  ],
+  "months": [
+    { "en": "january",   "fr": "janvier" },
+    { "en": "february",  "fr": "février" },
+    { "en": "march",     "fr": "mars" },
+    { "en": "april",     "fr": "avril" },
+    { "en": "may",       "fr": "mai" },
+    { "en": "june",      "fr": "juin" },
+    { "en": "july",      "fr": "juillet" },
+    { "en": "august",    "fr": "août" },
+    { "en": "september", "fr": "septembre" },
+    { "en": "october",   "fr": "octobre" },
+    { "en": "november",  "fr": "novembre" },
+    { "en": "december",  "fr": "décembre" }
+  ],
+  "workbook": {
+    "hours": { "en": "hours", "fr": "heures" }
+  },
+  "form": {
+    "title": { "en": "Timesheet generation", "fr": "Génération de l'emploi du temps" },
+    "year": { "en": "Select year", "fr": "Choisissez l'année" },
+    "week": { "en": "Select week type", "fr": "Choisissez le type de semaine" },
+    "breakout": { "en": "Select breakout type", "fr": "Choisissez le type de rupture" },
+    "generate": { "en": "Generate", "fr": "Générer" }
+  }
+}
