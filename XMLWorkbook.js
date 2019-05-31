@@ -26,7 +26,7 @@ class XMLWorkbook {
       <Alignment ss:Vertical="Bottom" ss:WrapText="1"/>
       <Font ss:FontName="Arial" ss:Bold="1"/>
       <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
-      <NumberFormat ss:Format="m/d/yyyy\\ h:mm:ss"/>
+      <NumberFormat ss:Format="${i18n('workbook.date-format').replace(/\//g, '&quot;/&quot;')}"/>
     </Style>
     <Style ss:ID="sHoursColumn">
      <Alignment ss:Vertical="Bottom" ss:WrapText="1"/>
@@ -35,7 +35,7 @@ class XMLWorkbook {
      </Borders>
      <Font ss:FontName="Arial" ss:Bold="1"/>
      <Interior ss:Color="#C9DAF8" ss:Pattern="Solid"/>
-     <NumberFormat ss:Format="m/d/yyyy\\ h:mm:ss"/>
+     <NumberFormat ss:Format="hh:mm"/>
     </Style>
     <Style ss:ID="sDayHeader">
       <Alignment ss:Vertical="Bottom" ss:WrapText="1"/>
@@ -49,7 +49,7 @@ class XMLWorkbook {
      <Alignment ss:Vertical="Bottom" ss:WrapText="1"/>
      <Font ss:FontName="Arial" ss:Bold="1"/>
      <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
-     <NumberFormat ss:Format="dd&quot;/&quot;mm"/>
+     <NumberFormat ss:Format="${i18n('workbook.date-format').replace(/\//g, '&quot;/&quot;')}"/>
     </Style>
     <Style ss:ID="sBreakoutHeader">
      <Alignment ss:Vertical="Bottom" ss:WrapText="1"/>
@@ -63,7 +63,7 @@ class XMLWorkbook {
       </Borders>
       <Font ss:FontName="Arial"/>
       <Interior ss:Color="#C9DAF8" ss:Pattern="Solid"/>
-      <NumberFormat ss:Format="[h]:mm:ss"/>
+      <NumberFormat ss:Format="hh:mm"/>
     </Style>
     <Style ss:ID="sDayFrom">
      <Alignment ss:Vertical="Bottom" ss:WrapText="1"/>
@@ -104,7 +104,6 @@ class XMLWorkbook {
      </Borders>
      <Font ss:FontName="Arial"/>
      <Interior ss:Color="#000000" ss:Pattern="Solid"/>
-     <NumberFormat ss:Format="m/d/yyyy h:mm:ss"/>
     </Style>
     <Style ss:ID="sBreakoutTotal">
       <Alignment ss:Vertical="Bottom" ss:WrapText="1"/>
@@ -113,7 +112,7 @@ class XMLWorkbook {
       </Borders>
       <Font ss:FontName="Arial" ss:Bold="1"/>
       <Interior ss:Color="#B4A7D6" ss:Pattern="Solid"/>
-      <NumberFormat ss:Format="[h]:mm:ss"/>
+      <NumberFormat ss:Format="hh:mm"/>
     </Style>
     <Style ss:ID="sBreakoutCells">
      <Alignment ss:Vertical="Bottom" ss:WrapText="1"/>
@@ -126,7 +125,7 @@ class XMLWorkbook {
   </Styles>
   <Worksheet ss:Name="${year}" ss:Protected="1">
    <Table ss:ExpandedColumnCount="${4 * weekDays.length + 2}" x:FullColumns="1" x:FullRows="1" ss:StyleID="sDefault" ss:DefaultColumnWidth="79.5">
-     <Column ss:StyleID="sDefault" ss:AutoFitWidth="0" ss:Width="41"/>
+     <Column ss:StyleID="sDefault" ss:AutoFitWidth="0" ss:Width="60"/>
      <Column ss:StyleID="sDefault" ss:AutoFitWidth="0" ss:Width="48"/>
      <Column ss:StyleID="sDefault" ss:AutoFitWidth="0" ss:Width="40" ss:Span="${4 * weekDays.length - 1}"/>
      <Row ss:AutoFitHeight="0">
