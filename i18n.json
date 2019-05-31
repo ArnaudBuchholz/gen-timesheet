@@ -24,6 +24,7 @@
     { "en": "december",  "fr": "décembre" }
   ],
   "workbook": {
+    "date-format": { "en": "m/d", "fr": "dd/mm" },
     "hours": { "en": "hours", "fr": "heures" }
   },
   "form": {
