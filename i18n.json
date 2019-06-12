@@ -31,7 +31,11 @@
     "title": { "en": "Timesheet generation", "fr": "Génération de l'emploi du temps" },
     "year": { "en": "Select year", "fr": "Choisissez l'année" },
     "week": { "en": "Select week type", "fr": "Choisissez le type de semaine" },
-    "breakout": { "en": "Select breakout type", "fr": "Choisissez le type de rupture" },
+    "breakout": { "en": "Select breakout type", "fr": "Choisissez le type de rupture",
+      "month": {  "en": "Every month", "fr": "Mensuel" },
+      "bi15": { "en": "Twice per month (15 / end of month)", "fr": "Bimensuel (15 / fin du mois)"},
+      "biweek": { "en": "Twice per month (every two weeks)", "fr": "Bimensuel (toutes les deux semaines)"}
+    },
     "generate": { "en": "Generate", "fr": "Générer" }
   }
 }
