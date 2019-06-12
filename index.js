@@ -18,6 +18,10 @@ const FORMAT_CONSOLE = [
   'background: black; color: yellow;'
 ]
 
+const BREAKOUT_MONTH = 'month'
+const BREAKOUT_BI15 = 'bi15'
+const BREAKOUT_BIWEEK = 'biweek'
+
 function pad (number, length = 2) {
   return number.toString().padStart(length, '0')
 }
@@ -31,6 +35,31 @@ function clearTime (date) {
   date.setMinutes(0)
   date.setSeconds(0)
   date.setMilliseconds(0)
+  return date
+}
+
+function getBreakoutDates (firstDayOfTheWeek, year, breakoutType) {
+  const breakoutDates = []
+  if (breakoutType === BREAKOUT_BIWEEK) {
+    let day = new Date(firstDayOfTheWeek.getTime() + 14 * DAY)
+    while (day.getFullYear() <= year) {
+      breakoutDates.push(new Date(day.getTime() - DAY))
+      day = clearTime(new Date(day.getTime() + 14 * DAY))
+    }
+    breakoutDates.push(new Date(day.getTime() - DAY))
+  } else {
+    if (breakoutType === BREAKOUT_BI15) {
+      breakoutDates.push(new Date(year, 0, 15))
+    }
+    for (var month = 1; month < 13; ++month) {
+      breakoutDates.push(new Date(year, month, 0))
+      if (breakoutType === BREAKOUT_BI15) {
+        breakoutDates.push(new Date(year, month, 15))
+      }
+    }
+    breakoutDates.push(new Date(year, 11, 31))
+  }
+  return breakoutDates
 }
 
 function generateFor (year, weekDays, breakoutType) {
@@ -44,17 +73,7 @@ function generateFor (year, weekDays, breakoutType) {
   }
   console.log('First day of the week for this year: ' + dateToUsrFmt(day))
   // Breakout dates
-  const breakoutDates = []
-  if (breakoutType === 2) {
-    breakoutDates.push(new Date(year, 0, 15))
-  }
-  for (var month = 1; month < 13; ++month) {
-    breakoutDates.push(new Date(year, month, 0))
-    if (breakoutType === 2) {
-      breakoutDates.push(new Date(year, month, 15))
-    }
-  }
-  breakoutDates.push(new Date(year, 11, 31))
+  const breakoutDates = getBreakoutDates(day, year, breakoutType)
   breakoutDates.forEach(clearTime)
   console.log('Breakout dates:')
   breakoutDates.forEach(date => console.log(`\t${dateToUsrFmt(date)}`))
@@ -131,16 +150,21 @@ function showForm () {
       tags.div({ className: 'form-group' }, [
         tags.label({ for: 'week' }, i18n('form.week')),
         tags.select({ className: 'form-control', id: 'week' }, [
-          tags.option({ value: '1,2,3,4,5,6' }, 'Mon, Tue, Wed, Thu, Fri, Sat'),
-          tags.option({ value: '1,2,3,4,5' }, 'Mon, Tue, Wed, Thu, Fri')
-        ])
+          '123456',
+          '12345'
+        ].map(days =>
+          tags.option({ value: days.split('') }, days.split('').map(day => i18n.capitalized(`days.${day}`)).join(', '))
+        ))
       ]),
       tags.div({ className: 'form-group' }, [
         tags.label({ for: 'breakouts' }, i18n('form.breakout')),
         tags.select({ className: 'form-control', id: 'breakouts' }, [
-          tags.option({ value: '2' }, 'Twice per month (15 / end of month)'),
-          tags.option({ value: '1' }, 'Every month')
-        ])
+          BREAKOUT_MONTH,
+          BREAKOUT_BI15,
+          BREAKOUT_BIWEEK
+        ].map(breakout =>
+          tags.option({ value: breakout }, i18n(`form.breakout.${breakout}`))
+        ))
       ]),
       tags.button({ className: 'btn btn-primary', id: 'generate' }, i18n('form.generate'))
     ]))
@@ -151,7 +175,7 @@ function showForm () {
     window.event.preventDefault()
     const selectedYear = parseInt(getSelectedValue('year'), 10)
     const selectedWeek = getSelectedValue('week').split(',').map(day => parseInt(day, 10))
-    const breakoutType = parseInt(getSelectedValue('breakouts'), 10)
+    const breakoutType = getSelectedValue('breakouts')
     location.href = generateFor(selectedYear, selectedWeek, breakoutType)
   })
 }
