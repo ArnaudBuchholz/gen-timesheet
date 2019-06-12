@@ -55,6 +55,7 @@ class XMLWorkbook {
      <Alignment ss:Vertical="Bottom" ss:WrapText="1"/>
      <Font ss:FontName="Arial" ss:Bold="1"/>
      <Interior ss:Color="#B4A7D6" ss:Pattern="Solid"/>
+     <NumberFormat ss:Format="${i18n('workbook.date-format').replace(/\//g, '&quot;/&quot;')}"/>
     </Style>
     <Style ss:ID="sWeekTotal">
       <Alignment ss:Vertical="Bottom" ss:WrapText="1"/>
@@ -169,14 +170,8 @@ class XMLWorkbook {
 
   renderBreakout (date) {
     this._content.push(`     <Row ss:AutoFitHeight="0">
+       <Cell ss:StyleID="sBreakoutHeader"><Data ss:Type="DateTime">${date.toISOString()}</Data></Cell>
 `)
-    if (date.getDate() === 15) {
-      this._content.push(`       <Cell ss:StyleID="sBreakoutHeader"><Data ss:Type="String">15/</Data></Cell>
-`)
-    } else {
-      this._content.push(`       <Cell ss:StyleID="sBreakoutHeader"><Data ss:Type="String">${i18n.capitalized(`months.${date.getMonth()}`)}</Data></Cell>
-`)
-    }
     const rows = []
     while (this._weeks > 0) {
       rows.push(`R[-${this._weeks}]C`)
