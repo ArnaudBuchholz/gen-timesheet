@@ -21,6 +21,7 @@ const FORMAT_CONSOLE = [
 const BREAKOUT_MONTH = 'month'
 const BREAKOUT_BI15 = 'bi15'
 const BREAKOUT_BIWEEK = 'biweek'
+const BREAKOUT_BIWEEK_SHIFT = 'biweek-shift'
 
 function pad (number, length = 2) {
   return number.toString().padStart(length, '0')
@@ -40,8 +41,13 @@ function clearTime (date) {
 
 function getBreakoutDates (firstDayOfTheWeek, year, breakoutType) {
   const breakoutDates = []
-  if (breakoutType === BREAKOUT_BIWEEK) {
-    let day = new Date(firstDayOfTheWeek.getTime() + 14 * DAY)
+  if ([BREAKOUT_BIWEEK, BREAKOUT_BIWEEK_SHIFT].includes(breakoutType)) {
+    let day
+    if (BREAKOUT_BIWEEK === breakoutType) {
+      day = new Date(firstDayOfTheWeek.getTime() + 14 * DAY)
+    } else {
+      day = new Date(firstDayOfTheWeek.getTime() + 7 * DAY)
+    }
     while (day.getFullYear() <= year) {
       breakoutDates.push(new Date(day.getTime() - DAY))
       day = clearTime(new Date(day.getTime() + 14 * DAY))
@@ -161,7 +167,8 @@ function showForm () {
         tags.select({ className: 'form-control', id: 'breakouts' }, [
           BREAKOUT_MONTH,
           BREAKOUT_BI15,
-          BREAKOUT_BIWEEK
+          BREAKOUT_BIWEEK,
+          BREAKOUT_BIWEEK_SHIFT
         ].map(breakout =>
           tags.option({ value: breakout }, i18n(`form.breakout.${breakout}`))
         ))
