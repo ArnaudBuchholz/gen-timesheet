@@ -34,7 +34,8 @@
     "breakout": { "en": "Select breakout type", "fr": "Choisissez le type de rupture",
       "month": {  "en": "Every month", "fr": "Mensuel" },
       "bi15": { "en": "Twice per month (15 / end of month)", "fr": "Bimensuel (15 / fin du mois)"},
-      "biweek": { "en": "Twice per month (every two weeks)", "fr": "Bimensuel (toutes les deux semaines)"}
+      "biweek": { "en": "Twice per month (every two weeks)", "fr": "Bimensuel (toutes les deux semaines)"},
+      "biweek-shift": { "en": "Twice per month (every two weeks, shift first week)", "fr": "Bimensuel (toutes les deux semaines, sauter la première semaine)"}
     },
     "generate": { "en": "Generate", "fr": "Générer" }
   }
