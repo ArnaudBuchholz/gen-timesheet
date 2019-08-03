@@ -22,6 +22,7 @@ const BREAKOUT_MONTH = 'month'
 const BREAKOUT_BI15 = 'bi15'
 const BREAKOUT_BIWEEK = 'biweek'
 const BREAKOUT_BIWEEK_SHIFT = 'biweek-shift'
+const BREAKOUT_NONE = 'none'
 
 function pad (number, length = 2) {
   return number.toString().padStart(length, '0')
@@ -40,6 +41,9 @@ function clearTime (date) {
 }
 
 function getBreakoutDates (firstDayOfTheWeek, year, breakoutType) {
+  if (BREAKOUT_NONE === breakoutType) {
+    return []
+  }
   const breakoutDates = []
   if ([BREAKOUT_BIWEEK, BREAKOUT_BIWEEK_SHIFT].includes(breakoutType)) {
     let day
@@ -127,7 +131,9 @@ function generateFor (year, weekDays, breakoutType) {
     }
     day = firstDayOfWeek
   }
-  insertBreakout() // final one
+  if (breakoutDates.length) {
+    insertBreakout() // final one
+  }
   return workbook.toString()
 }
 
@@ -142,8 +148,8 @@ function showForm () {
   tags.div({ className: 'jumbotron' }, [
     tags.h1(document.title),
     tags.h6(Object.keys(i18n.locales)
-        .filter(locale => locale !== i18n.locale)
-        .map(locale => tags.a({ href:'?lang=' + locale }, tags.span({ className: 'badge badge-secondary' }, i18n.locales[locale])))
+      .filter(locale => locale !== i18n.locale)
+      .map(locale => tags.a({ href: '?lang=' + locale }, tags.span({ className: 'badge badge-secondary' }, i18n.locales[locale])))
     ),
     tags.p(tags.form([
       tags.div({ className: 'form-group' }, [
@@ -168,7 +174,8 @@ function showForm () {
           BREAKOUT_MONTH,
           BREAKOUT_BI15,
           BREAKOUT_BIWEEK,
-          BREAKOUT_BIWEEK_SHIFT
+          BREAKOUT_BIWEEK_SHIFT,
+          BREAKOUT_NONE
         ].map(breakout =>
           tags.option({ value: breakout }, i18n(`form.breakout.${breakout}`))
         ))
