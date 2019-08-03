@@ -35,7 +35,8 @@
       "month": {  "en": "Every month", "fr": "Mensuel" },
       "bi15": { "en": "Twice per month (15 / end of month)", "fr": "Bimensuel (15 / fin du mois)"},
       "biweek": { "en": "Twice per month (every two weeks)", "fr": "Bimensuel (toutes les deux semaines)"},
-      "biweek-shift": { "en": "Twice per month (every two weeks, shift first week)", "fr": "Bimensuel (toutes les deux semaines, sauter la première semaine)"}
+      "biweek-shift": { "en": "Twice per month (every two weeks, shift first week)", "fr": "Bimensuel (toutes les deux semaines, sauter la première semaine)"},
+      "none": { "en": "None (weekly)", "fr": "Aucune (toutes les semaines)"}
     },
     "generate": { "en": "Generate", "fr": "Générer" }
   }
