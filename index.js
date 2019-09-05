@@ -163,7 +163,8 @@ function showForm () {
         tags.label({ for: 'week' }, i18n('form.week')),
         tags.select({ className: 'form-control', id: 'week' }, [
           '123456',
-          '12345'
+          '12345',
+          '5'
         ].map(days =>
           tags.option({ value: days.split('') }, days.split('').map(day => i18n.capitalized(`days.${day}`)).join(', '))
         ))
