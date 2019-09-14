@@ -164,6 +164,7 @@ function showForm () {
         tags.select({ className: 'form-control', id: 'week' }, [
           '123456',
           '12345',
+          '3',
           '5'
         ].map(days =>
           tags.option({ value: days.split('') }, days.split('').map(day => i18n.capitalized(`days.${day}`)).join(', '))
