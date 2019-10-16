@@ -24,7 +24,7 @@
   "homepage": "https://github.com/ArnaudBuchholz/gen-timesheet#readme",
   "dependencies": {
     "gpf-js": "^0.2.9",
-    "reserve": "^1.0.4"
+    "reserve": "^1.1.1"
   },
   "devDependencies": {
     "lodash": ">=4.17.13",
