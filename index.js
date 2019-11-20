@@ -6,7 +6,11 @@ const tags = {}
 'h1,h6,a,p,div,span,form,label,button,select,option'
   .split(',').forEach(tag => { tags[tag] = gpf.web.createTagFunction(tag) })
 
-const DAY = 24 * 60 * 60 * 1000
+function next (date, daysOffset) {
+  const result = new Date(date)
+  result.setDate(result.getDate() + daysOffset)
+  return result
+}
 
 const FORMAT_NORMAL = 0
 const FORMAT_BREAKOUT = 1
@@ -32,14 +36,6 @@ function dateToUsrFmt (date) {
   return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}`
 }
 
-function clearTime (date) {
-  date.setHours(0)
-  date.setMinutes(0)
-  date.setSeconds(0)
-  date.setMilliseconds(0)
-  return date
-}
-
 function getBreakoutDates (firstDayOfTheWeek, year, breakoutType) {
   if (BREAKOUT_NONE === breakoutType) {
     return []
@@ -48,26 +44,26 @@ function getBreakoutDates (firstDayOfTheWeek, year, breakoutType) {
   if ([BREAKOUT_BIWEEK, BREAKOUT_BIWEEK_SHIFT].includes(breakoutType)) {
     let day
     if (BREAKOUT_BIWEEK === breakoutType) {
-      day = new Date(firstDayOfTheWeek.getTime() + 14 * DAY)
+      day = next(firstDayOfTheWeek, 14)
     } else {
-      day = new Date(firstDayOfTheWeek.getTime() + 7 * DAY)
+      day = next(firstDayOfTheWeek, 7)
     }
     while (day.getFullYear() <= year) {
-      breakoutDates.push(new Date(day.getTime() - DAY))
-      day = clearTime(new Date(day.getTime() + 14 * DAY))
+      breakoutDates.push(next(day, -1))
+      day = next(day, 14)
     }
-    breakoutDates.push(new Date(day.getTime() - DAY))
+    breakoutDates.push(next(day, -1))
   } else {
     if (breakoutType === BREAKOUT_BI15) {
-      breakoutDates.push(new Date(year, 0, 15))
+      breakoutDates.push(new Date(year, 0, 15, 0, 0, 0, 0))
     }
     for (var month = 1; month < 13; ++month) {
-      breakoutDates.push(new Date(year, month, 0))
+      breakoutDates.push(new Date(year, month, 0, 0, 0, 0, 0))
       if (breakoutType === BREAKOUT_BI15) {
-        breakoutDates.push(new Date(year, month, 15))
+        breakoutDates.push(new Date(year, month, 15, 0, 0, 0, 0))
       }
     }
-    breakoutDates.push(new Date(year, 11, 31))
+    breakoutDates.push(new Date(year, 11, 31, 0, 0, 0, 0))
   }
   return breakoutDates
 }
@@ -79,12 +75,11 @@ function generateFor (year, weekDays, breakoutType) {
   let day = janFirst
   // Search for the first day of the week
   while (day.getDay() !== weekDays[0]) {
-    day = new Date(day.getTime() - DAY)
+    day = next(day, -1)
   }
   console.log('First day of the week for this year: ' + dateToUsrFmt(day))
   // Breakout dates
   const breakoutDates = getBreakoutDates(day, year, breakoutType)
-  breakoutDates.forEach(clearTime)
   console.log('Breakout dates:')
   breakoutDates.forEach(date => console.log(`\t${dateToUsrFmt(date)}`))
   // Render calendar
@@ -115,8 +110,7 @@ function generateFor (year, weekDays, breakoutType) {
       } else {
         formats.push(FORMAT_NORMAL)
       }
-      day = new Date(day.getTime() + DAY)
-      clearTime(day)
+      day = next(day, 1)
     })
     if (formats.includes(FORMAT_NORMAL)) {
       console.log.apply(console, [dates.map(date => `%c${dateToUsrFmt(date)}`).join(' ')]
@@ -126,8 +120,7 @@ function generateFor (year, weekDays, breakoutType) {
     if (breakout) {
       insertBreakout()
     } else {
-      firstDayOfWeek = new Date(firstDayOfWeek.getTime() + 7 * DAY)
-      clearTime(firstDayOfWeek)
+      firstDayOfWeek = next(firstDayOfWeek, 7)
     }
     day = firstDayOfWeek
   }
