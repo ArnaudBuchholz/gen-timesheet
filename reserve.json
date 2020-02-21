@@ -1,0 +1,10 @@
+{
+  "port": 5000,
+  "mappings": [{
+    "match": "\\bgpf\\.js$",
+    "file": "node_modules/gpf-js/build/gpf.js"
+  }, {
+    "match": "(.*)",
+    "file": "./$1"
+  }]
+}
