@@ -23,8 +23,8 @@
   },
   "homepage": "https://github.com/ArnaudBuchholz/gen-timesheet#readme",
   "dependencies": {
-    "gpf-js": "^0.2.9",
-    "reserve": "^1.1.1"
+    "gpf-js": "^1.0.0",
+    "reserve": "^1.2.1"
   },
   "devDependencies": {
     "lodash": ">=4.17.13",
