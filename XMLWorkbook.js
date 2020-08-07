@@ -35,7 +35,7 @@ class XMLWorkbook {
      </Borders>
      <Font ss:FontName="Arial" ss:Bold="1"/>
      <Interior ss:Color="#C9DAF8" ss:Pattern="Solid"/>
-     <NumberFormat ss:Format="hh:mm"/>
+     <NumberFormat ss:Format="[h]:mm"/>
     </Style>
     <Style ss:ID="sDayHeader">
       <Alignment ss:Vertical="Bottom" ss:WrapText="1"/>
