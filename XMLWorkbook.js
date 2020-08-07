@@ -64,7 +64,7 @@ class XMLWorkbook {
       </Borders>
       <Font ss:FontName="Arial"/>
       <Interior ss:Color="#C9DAF8" ss:Pattern="Solid"/>
-      <NumberFormat ss:Format="hh:mm"/>
+      <NumberFormat ss:Format="[h]:mm"/>
     </Style>
     <Style ss:ID="sDayFrom">
      <Alignment ss:Vertical="Bottom" ss:WrapText="1"/>
@@ -96,7 +96,7 @@ class XMLWorkbook {
      </Borders>
      <Font ss:FontName="Arial"/>
      <Interior ss:Color="#D9EAD3" ss:Pattern="Solid"/>
-     <NumberFormat ss:Format="hh:mm"/>
+     <NumberFormat ss:Format="[h]:mm"/>
     </Style>
     <Style ss:ID="sDayOut">
      <Alignment ss:Vertical="Bottom" ss:WrapText="1"/>
@@ -113,7 +113,7 @@ class XMLWorkbook {
       </Borders>
       <Font ss:FontName="Arial" ss:Bold="1"/>
       <Interior ss:Color="#B4A7D6" ss:Pattern="Solid"/>
-      <NumberFormat ss:Format="hh:mm"/>
+      <NumberFormat ss:Format="[h]:mm"/>
     </Style>
     <Style ss:ID="sBreakoutCells">
      <Alignment ss:Vertical="Bottom" ss:WrapText="1"/>
