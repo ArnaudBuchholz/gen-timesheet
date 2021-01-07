@@ -57,7 +57,7 @@ function getBreakoutDates (firstDayOfTheWeek, year, breakoutType) {
     if (breakoutType === BREAKOUT_BI15) {
       breakoutDates.push(new Date(year, 0, 15, 0, 0, 0, 0))
     }
-    for (var month = 1; month < 13; ++month) {
+    for (let month = 1; month < 13; ++month) {
       breakoutDates.push(new Date(year, month, 0, 0, 0, 0, 0))
       if (breakoutType === BREAKOUT_BI15) {
         breakoutDates.push(new Date(year, month, 15, 0, 0, 0, 0))
