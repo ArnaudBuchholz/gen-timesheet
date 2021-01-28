@@ -141,6 +141,11 @@ class XMLWorkbook {
     this._weeks = 0
   }
 
+  renderDateTime (date) {
+    const utcDate = new Date(date.getTime() - date.getTimezoneOffset() * 60*1000)
+    return utcDate.toISOString()
+  }
+
   renderWeek (dates, formats) {
     ++this._weeks
     const formula = formats
@@ -149,7 +154,7 @@ class XMLWorkbook {
       .map(index => `RC[${4 * (index + 1)}]`)
       .join('+')
     this._content.push(`     <Row ss:AutoFitHeight="0">
-      <Cell ss:StyleID="sWeekHeader"><Data ss:Type="DateTime">${dates[0].toISOString()}</Data></Cell>
+      <Cell ss:StyleID="sWeekHeader"><Data ss:Type="DateTime">${this.renderDateTime(dates[0])}</Data></Cell>
       <Cell ss:StyleID="sWeekTotal" ss:Formula="=${formula}"><Data ss:Type="DateTime">1899-12-31T00:00:00.000</Data></Cell>
 `)
     dates.forEach((day, index) => {
@@ -170,7 +175,7 @@ class XMLWorkbook {
 
   renderBreakout (date) {
     this._content.push(`     <Row ss:AutoFitHeight="0">
-       <Cell ss:StyleID="sBreakoutHeader"><Data ss:Type="DateTime">${date.toISOString()}</Data></Cell>
+       <Cell ss:StyleID="sBreakoutHeader"><Data ss:Type="DateTime">${this.renderDateTime(date)}</Data></Cell>
 `)
     const rows = []
     while (this._weeks > 0) {
