@@ -142,7 +142,7 @@ class XMLWorkbook {
   }
 
   renderDateTime (date) {
-    const utcDate = new Date(date.getTime() - date.getTimezoneOffset() * 60*1000)
+    const utcDate = new Date(date.getTime() - date.getTimezoneOffset() * 60 * 1000)
     return utcDate.toISOString()
   }
 
