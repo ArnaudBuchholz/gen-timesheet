@@ -157,6 +157,7 @@ function showForm () {
         tags.select({ className: 'form-control', id: 'week' }, [
           '123456',
           '12345',
+          '1',
           '3',
           '5'
         ].map(days =>
